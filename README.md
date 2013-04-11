@@ -1,4 +1,4 @@
-![My image](justinslee.github.com/GitHub-Play-TheTextChange/images/logo.png)
+![My image](/images/logo.png)
 =====================================
 
 This web application is built using the Play framework.   The web application goal is to provide a way
@@ -6,7 +6,7 @@ for ICS students to exchange textbooks with each other.
 
 ER-Model Diagram
 =====================================
-![My image](justinslee.github.com/GitHub-Play-TheTextChange/images/ER-TheTextChange.png)
+![My image](images/ER-TheTextChange.png)
 
 Installation
 =====================================
