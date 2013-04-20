@@ -34,19 +34,19 @@ public class ModelTest {
   public void testModel() {
     
     //Create 1 of each Model
-    Book book = new Book("book", "edition", 1234567890123L, 200L);
-    Student student = new Student("student", "email");
-    Offer offer = new Offer("new", 100L);
-    Request request = new Request("used", 50L);
+    Book book = new Book("Book-01", "book", "edition", "1234567890123", "200");
+    Student student = new Student("Student-01", "student", "email");
+    Offer offer = new Offer("Offer-01", "new", "100");
+    Request request = new Request("Request-01", "old", "50");
     
     //Associate Models
-    book.requests.add(request);
-    request.book = book;
-    request.student = student;
+    book.getRequests().add(request);
+    request.setBook(book);
+    request.setStudent(student);
     
-    book.offers.add(offer);
-    offer.book = book;
-    offer.student = student;
+    book.getOffers().add(offer);
+    offer.setBook(book);
+    offer.setStudent(student);
     
     //Persist the sample model by saving all entities and relationships
     student.save();
@@ -68,14 +68,14 @@ public class ModelTest {
     assertEquals("Checking request", requests.size(), 1);
     
     //Check that we've recovered all relationships.
-    assertEquals("Student-Request", students.get(0).requests.get(0), requests.get(0));
-    assertEquals("Request-Student", requests.get(0).student, students.get(0));
-    assertEquals("Book-Request", books.get(0).requests.get(0), requests.get(0));
-    assertEquals("Request-Book", requests.get(0).book, books.get(0));
-    assertEquals("Student-Offer", students.get(0).offers.get(0), offers.get(0));
-    assertEquals("Offer-Student", offers.get(0).student, students.get(0));
-    assertEquals("Book-Offer", books.get(0).offers.get(0), offers.get(0));
-    assertEquals("Offer-Book", offers.get(0).book, books.get(0));  
+    assertEquals("Student-Request", students.get(0).getRequests().get(0), requests.get(0));
+    assertEquals("Request-Student", requests.get(0).getStudent(), students.get(0));
+    assertEquals("Book-Request", books.get(0).getRequests().get(0), requests.get(0));
+    assertEquals("Request-Book", requests.get(0).getBook(), books.get(0));
+    assertEquals("Student-Offer", students.get(0).getOffers().get(0), offers.get(0));
+    assertEquals("Offer-Student", offers.get(0).getStudent(), students.get(0));
+    assertEquals("Book-Offer", books.get(0).getOffers().get(0), offers.get(0));
+    assertEquals("Offer-Book", offers.get(0).getBook(), books.get(0));  
 
     // Testing for model manipulation and cascading
     // Show that all entries exist in database
@@ -85,22 +85,24 @@ public class ModelTest {
     assertTrue("Books in database", !Book.find().findList().isEmpty());
 
     // Show that offer exists in database
-    assertTrue("Book has no offer", !Book.find().findList().get(0).offers.isEmpty());
-    assertTrue("Student has no offer", !Student.find().findList().get(0).offers.isEmpty());
+    assertTrue("Book has no offer", !Book.find().findList().get(0).getOffers().isEmpty());
+    assertTrue("Student has no offer", !Student.find().findList().get(0).getOffers().isEmpty());
     
-    // Two ways of deleting offers are show below
-    book.clearOffers(); 
-    //offer.delete();  
+    // Delete all offers
+    List<Offer> offerClear = Offer.find().findList();
+    for (Offer o: offerClear) {
+      o.delete();
+    }
   
     // Show that offers 
-    assertTrue("Previously retrieved book still has offer", !books.get(0).offers.isEmpty());
-    assertTrue("Book has no offers", Book.find().findList().get(0).offers.isEmpty());
+    assertTrue("Previously retrieved book still has offer", !books.get(0).getOffers().isEmpty());
+    assertTrue("Book has no offers", Book.find().findList().get(0).getOffers().isEmpty());
     assertTrue("Offer has no book", Offer.find().findList().isEmpty());
 
  
     // Show that offer does not exist in database
-    assertTrue("Book has an offer", Book.find().findList().get(0).offers.isEmpty());
-    assertTrue("Student has an offer", Student.find().findList().get(0).offers.isEmpty());
+    assertTrue("Book has an offer", Book.find().findList().get(0).getOffers().isEmpty());
+    assertTrue("Student has an offer", Student.find().findList().get(0).getOffers().isEmpty());
     assertTrue("No more offers in database", Offer.find().findList().isEmpty());
 
     // Delete book show database persistence
